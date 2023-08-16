@@ -12,7 +12,7 @@ import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-cont
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from '@expo/vector-icons/Ionicons';
 //import Banner from './Banner';
-import FlashSale from './FlashSale';
+import SlugScreen from './SlugScreen';
 import FlashComp from './FlashComp';
 import CategoryComp from './CategoryComp';
 import ProductHot from './ProductHot';
@@ -20,6 +20,7 @@ import ProductNew from './ProductNew';
 import Carousel from '../components/Carousel';
 import SearchProduct from './SearchProduct';
 import { images, COLORS } from '../constants'
+import CategoryScreen from './CategoryScreen';
 
 const Stack = createStackNavigator();
 
@@ -77,12 +78,12 @@ export const Home = ({ navigation }) => {
           {/* <Banner />         */}
           <Carousel />
           <FlashComp navigation ={navigation} />
-          <CategoryComp />
+          <CategoryComp navigation ={navigation} />
   
           {/* sản phẩm hot */}
-          <ProductHot />
+          <ProductHot navigation ={navigation} />
           {/* sản phẩm mới */}
-          <ProductNew /> 
+          <ProductNew navigation ={navigation} /> 
         </ScrollView>
     </SafeArea>               
   );
@@ -99,8 +100,15 @@ function StackHome() {
         }}
       /> 
       <Stack.Screen
-        name="FlashSale"
-        component={FlashSale}
+        name="SlugScreen"
+        component={SlugScreen}
+        options={{
+          header: () => null,
+        }}
+      />
+      <Stack.Screen
+        name="CategoryScreen"
+        component={CategoryScreen}
         options={{
           header: () => null,
         }}

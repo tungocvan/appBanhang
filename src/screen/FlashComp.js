@@ -25,7 +25,7 @@ function FlashComp({ navigation }) {
           </Text>
           <Ionicons name="flash-outline" color="red" size={24} />
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('FlashSale')}>
+        <TouchableOpacity onPress={() => navigation.navigate('SlugScreen')}>
           <Text
             style={{
               paddingLeft: 10,

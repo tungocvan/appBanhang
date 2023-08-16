@@ -9,7 +9,7 @@ import BoxShadow from '../components/BoxShadow';
 import { COLORS, FONTS, SIZES, images } from '../constants';
 function Account({ navigation }) {
   useFocusEffect(
-    React.useCallback(async () => {
+    React.useCallback(() => {
       // Do something when the screen is focused
       console.log('Account useFocusEffect');
       return () => {

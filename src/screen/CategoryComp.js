@@ -17,31 +17,31 @@ function CategoryComp ( {navigation} ) {
             flexWrap:'wrap',
             justifyContent:'flex-start '
           }}>
-            <TouchableOpacity style={{marginVertical:15}}>
+            <TouchableOpacity style={{marginVertical:15}} onPress={() => navigation.navigate('CategoryScreen')}>
             <View style={{justifyContent: "center",alignItems: "center",width:120,height:120}}>
                 <Image resizeMode='stretch' source={require('../assets/images/banner-1.jpg')} style={{width:90,height:90,borderRadius:1000,borderWidth:1,borderColor:'#ccc'}} />
                 <Text style={{fontSize:16,fontWeight:600}}>Tân dược</Text>
             </View>
             </TouchableOpacity>            
-            <TouchableOpacity style={{marginVertical:15}}>
+            <TouchableOpacity style={{marginVertical:15}} onPress={() => navigation.navigate('CategoryScreen')}>
             <View style={{justifyContent: "center",alignItems: "center",width:120,height:120}}>
                 <Image resizeMode='stretch' source={require('../assets/images/banner-2.jpg')} style={{width:90,height:90,borderRadius:1000,borderWidth:1,borderColor:'#ccc'}} />
                 <Text style={{fontSize:16,fontWeight:600}}>Đông dược</Text>
             </View>
             </TouchableOpacity>            
-            <TouchableOpacity style={{marginVertical:15}}>
+            <TouchableOpacity style={{marginVertical:15}} onPress={() => navigation.navigate('CategoryScreen')}>
             <View style={{justifyContent: "center",alignItems: "center",width:120,height:120}}>
                 <Image resizeMode='stretch' source={require('../assets/images/banner-3.jpg')} style={{width:90,height:90,borderRadius:1000,borderWidth:1,borderColor:'#ccc'}} />
                 <Text style={{fontSize:16,fontWeight:600}}>TP chức năng</Text>
             </View>
             </TouchableOpacity>            
-            <TouchableOpacity style={{marginVertical:15}}>
+            <TouchableOpacity style={{marginVertical:15}} onPress={() => navigation.navigate('CategoryScreen')}>
             <View style={{justifyContent: "center",alignItems: "center",width:120,height:120}}>
                 <Image resizeMode='stretch' source={require('../assets/images/banner-1.jpg')} style={{width:90,height:90,borderRadius:1000,borderWidth:1,borderColor:'#ccc'}} />
                 <Text style={{fontSize:16,fontWeight:600}}>Vật tư - TBYT</Text>
             </View>
             </TouchableOpacity>            
-            <TouchableOpacity style={{marginVertical:15}}>
+            <TouchableOpacity style={{marginVertical:15}} onPress={() => navigation.navigate('CategoryScreen')}>
             <View style={{justifyContent: "center",alignItems: "center",width:120,height:120}}>
                 <Image resizeMode='stretch' source={require('../assets/images/banner-2.jpg')} style={{width:90,height:90,borderRadius:1000,borderWidth:1,borderColor:'#ccc'}} />
                 <Text style={{fontSize:16,fontWeight:600}}>Tân dược ETC</Text>
