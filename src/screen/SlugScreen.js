@@ -1,5 +1,5 @@
 import React from 'react';
-import { View , Text, TouchableOpacity, SafeAreaView as SafeAreaViewIos } from 'react-native';
+import { View , Text, TouchableOpacity, SafeAreaView as SafeAreaViewIos, Platform } from 'react-native';
 import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 function SlugScreen( {navigation} ) {

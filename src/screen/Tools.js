@@ -33,7 +33,7 @@ function Tools({ navigation }) {
           <View style={styles.wrap}></View>
         </View>
       </View>
-       <Swiper>
+       <Swiper> 
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Slide 1</Text>
       </View>

@@ -17,10 +17,10 @@ import FlashComp from './FlashComp';
 import CategoryComp from './CategoryComp';
 import ProductHot from './ProductHot';
 import ProductNew from './ProductNew';
-import Carousel from '../components/Carousel';
 import SearchProduct from './SearchProduct';
 import { images, COLORS } from '../constants'
 import CategoryScreen from './CategoryScreen';
+import Silders from '../components/Silders';
 
 const Stack = createStackNavigator();
 
@@ -69,14 +69,15 @@ export const Home = ({ navigation }) => {
               alignItems: 'center',
               paddingLeft: 15,
               flexDirection: 'row',
+              marginBottom:5
             }}>
             <Ionicons name="search-outline" color="black" size={24} />
             <Text style={{ color: '#ccc', paddingLeft: 10 }}>
               Tìm kiếm sản phẩm 
             </Text>
           </TouchableOpacity>
-          {/* <Banner />         */}
-          <Carousel />
+          {/* <Banner />         */}          
+          <Silders />
           <FlashComp navigation ={navigation} />
           <CategoryComp navigation ={navigation} />
   
