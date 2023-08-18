@@ -15,7 +15,7 @@ export const getAccountAll = createAsyncThunk('accounts/accountsFetched', async 
 
 export const registerUser = createAsyncThunk('accounts/registerUser', async (data) => {
   try {            
-    const response = await axios.post('https://laravel.tungocvan.com/api/users/dangky',data); // Thay đổi URL API của bạn tại đây
+    const response = await axios.post('https://laravel.tungocvan.com/api/dangky',data); // Thay đổi URL API của bạn tại đây
     return response.data
       //setData(response.data); // Lưu dữ liệu trả về vào state
       ////console.log('data:',response.data);
@@ -27,7 +27,7 @@ export const registerUser = createAsyncThunk('accounts/registerUser', async (dat
 
 export const loginUser = createAsyncThunk('accounts/loginUser', async (data) => {
   try {            
-    const response = await axios.post('https://laravel.tungocvan.com/api/users/dangnhap',data); // Thay đổi URL API của bạn tại đây
+    const response = await axios.post('https://laravel.tungocvan.com/api/dangnhap',data); // Thay đổi URL API của bạn tại đây
     return response.data      
     } catch (error) {
       console.error('Đã có lỗi gọi api xảy ra:');    
@@ -36,7 +36,7 @@ export const loginUser = createAsyncThunk('accounts/loginUser', async (data) => 
 })
 export const changePass = createAsyncThunk('accounts/changePass', async (data) => {
   try {            
-    const response = await axios.post('https://laravel.tungocvan.com/api/users/changepass',data); // Thay đổi URL API của bạn tại đây
+    const response = await axios.post('https://laravel.tungocvan.com/api/changepass',data); // Thay đổi URL API của bạn tại đây
     return response.data      
     } catch (error) {
       console.error('Đã có lỗi gọi api xảy ra:');    
@@ -45,7 +45,7 @@ export const changePass = createAsyncThunk('accounts/changePass', async (data) =
 })
 export const recoverPass = createAsyncThunk('accounts/recoverPass', async (data) => {
   try {            
-    const response = await axios.post('https://laravel.tungocvan.com/api/users/phuchoi',data); // Thay đổi URL API của bạn tại đây
+    const response = await axios.post('https://laravel.tungocvan.com/api/phuchoi',data); // Thay đổi URL API của bạn tại đây
     return response.data      
     } catch (error) {
       console.error('Đã có lỗi gọi api xảy ra:');    

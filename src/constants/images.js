@@ -11,6 +11,11 @@ const banner1 = require("../assets/images/banner-1.jpg");
 const banner2 = require("../assets/images/banner-2.jpg");
 const banner3 = require("../assets/images/banner-3.jpg");
 
+const tanduoc = require("../assets/images/tan-duoc.png");
+const dongduoc = require("../assets/images/dong-duoc.png");
+const tanduocetc = require("../assets/images/tan-duoc-etc.png");
+const tbyt = require("../assets/images/tbyt.png");
+const tpcn = require("../assets/images/tpcn.png");
 
 export default {
     logo,
@@ -23,5 +28,10 @@ export default {
     shoes4,
     banner1,
     banner2,
-    banner3
+    banner3,
+    tanduoc,
+    dongduoc,
+    tanduocetc,
+    tbyt,
+    tpcn
 }

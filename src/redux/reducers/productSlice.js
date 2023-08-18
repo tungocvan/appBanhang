@@ -4,7 +4,7 @@ import axios from 'axios';
 export const getProducts = createAsyncThunk('products/productsFetched', async (data) => {
   try {                 
     //console.log('data api:',data)
-    const response = await axios.post('https://laravel.tungocvan.com/api/users/getProducts',data); // Thay đổi URL API của bạn tại đây
+    const response = await axios.post('https://laravel.tungocvan.com/api/getProducts',data); // Thay đổi URL API của bạn tại đây
     return response.data
     } catch (error) { 
       console.error('Đã có lỗi gọi api xảy ra:');    
