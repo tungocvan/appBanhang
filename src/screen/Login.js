@@ -87,6 +87,8 @@ function Login({ navigation }) {
                             onChangeText= {handleUser}                            
                             onFocus={loginFocus}                                                                                
                             placeholder={'Nhập email'}
+                            autoComplete='username'
+                            autoCapitalize='none'
                             style={{width:'100%', borderWidth:1, fontSize:16,paddingHorizontal:10,paddingVertical:10, borderRadius:5,borderColor:'#ccc'}}
                         />
                     </View>

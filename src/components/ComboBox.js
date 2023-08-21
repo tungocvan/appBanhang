@@ -27,26 +27,28 @@ function ComboBox(props) {
   const onSearch = search => {
     if (search !== '') {
       let tempData = data.filter(item => {
-        return item.country.toLowerCase().indexOf(search.toLowerCase()) > -1;
+        return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
       });
+      
       setData(tempData);
+      //props.onSearch(tempData[0].code)
     } else {
       setData(countries.current);
     }
+    //console.log('data:',selectedCountry);
   };
 
   return (
     <SafeArea
-      style={{ flex: 1, marginHorizontal: 5, justifyContent: 'space-between' }}>
-      <View style={{flex: 1}}>
+      style={{ flex: 1 }}>
+    <View>
       <TouchableOpacity
         style={{
           width: '90%',
           height: 50,
           borderRadius: 10,
           borderWidth: 0.5,
-          alignSelf: 'center',
-          marginTop: 100,
+          alignSelf: 'center',          
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -73,14 +75,14 @@ function ComboBox(props) {
       </TouchableOpacity>
       {clicked ? (
         <View
-          style={{
-            elevation: 5,
+          style={{            
             marginTop: 20,
             height: 300,
             alignSelf: 'center',
             width: '90%',
-            backgroundColor: '#fff',
-            borderRadius: 10,
+            backgroundColor: 'white',
+            borderRadius: 10,            
+            
           }}>
           <TextInput
             placeholder="Search.."
@@ -104,6 +106,7 @@ function ComboBox(props) {
 
           <FlatList
             data={data}
+            
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -113,18 +116,21 @@ function ComboBox(props) {
                     height: 50,
                     justifyContent: 'center',
                     borderBottomWidth: 0.5,
-                    borderColor: '#8e8e8e',
+                    borderColor: '#8e8e8e',               
                   }}
                   onPress={() => {
-                    setSelectedCountry(item.country);
+                    setSelectedCountry(item.name);
                     setClicked(!clicked);
                     onSearch('');
                     setSearch('');
+                    props.onSearch(item.code)
                   }}>
-                  <Text style={{fontWeight: '600'}}>{item.country}</Text>
+                  <Text style={{fontWeight: '600'}}>{item.name}</Text>
                 </TouchableOpacity>
               );
             }}
+            
+            
           />
         </View>
       ) : null}
