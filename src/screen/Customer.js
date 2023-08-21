@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Platform, StyleSheet, SafeAreaView as SafeAreaViewIos, ScrollView } from 'react-native';
 import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-context';
+import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import Swiper from 'react-native-swiper';
+import CustomerDetail from './CustomerDetail';
 function Customer({ navigation }) {
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
   return (
@@ -35,13 +36,38 @@ function Customer({ navigation }) {
       </ScrollView>
       {/* button add   */}
       <View style={styles.wrap}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('CustomerDetail')}>
           <Text style={{color:'white',fontSize:30,fontWeight:600}}>+</Text>
         </TouchableOpacity>
       </View>
     </SafeArea>
   );
 }
+
+const Stack = createStackNavigator();
+
+
+function StackCustomer() { 
+  return (
+    <Stack.Navigator initialRouteName="Customer">
+      <Stack.Screen
+        name="Customer"
+        component={Customer}
+        options={{
+          header: () => null,
+        }}
+      />         
+      <Stack.Screen
+        name="CustomerDetail"
+        component={CustomerDetail}
+        options={{
+          header: () => null,
+        }}
+      />     
+    </Stack.Navigator>
+  );
+}
+
 
 const styles = StyleSheet.create({
   wrap: {    
@@ -65,5 +91,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Customer;
+export default StackCustomer;
+
+
 

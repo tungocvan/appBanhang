@@ -2,7 +2,7 @@ import React , {useState} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import StackHome from './Home';
-import Customer from './Customer';
+import StackCustomer from './Customer';
 import Alerts from './Alerts';
 import Account from './Account';
 import Tools from './Tools';
@@ -26,7 +26,7 @@ function Tabs() {
                   }} 
             />
             <Tab.Screen 
-                name="Customer" component={Customer} 
+                name="StackCustomer" component={StackCustomer} 
                 options={{
                     header: () => null,
                     tabBarLabel: "Khách hàng",
