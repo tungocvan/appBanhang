@@ -14,7 +14,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import RadioButton from '../components/RadioButton';
 import Checkbox from '../components/Checkbox';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProvinces, provincesSelector } from '../redux/reducers/dataSlice';
+import { getProvinces, provincesSelector, getDistricts, districtsSelector , resetDistricts} from '../redux/reducers/dataSlice';
 import ComboBox from '../components/ComboBox';
 
 
@@ -22,12 +22,11 @@ function CustomerDetail({ navigation }) {
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
   const dispatch = useDispatch()
   const provinces = useSelector(provincesSelector);
-  useEffect(() => {
-    dispatch(getProvinces());
-  },[])
-  
-
+  const districts = useSelector(districtsSelector);
+  //const [dist,setDist] = useState(districts);
   const [marginText,setMarginText] = useState(0);
+  const [paddingText,setPaddingText] = useState(0);
+  const [paddingDis,setPaddingPaddingDis] = useState(0);
   const [code,setCode] = useState(0);
   //const marginText = useRef(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -51,7 +50,7 @@ function CustomerDetail({ navigation }) {
       handleFocus(0)
     }
     
-    console.log(option);
+    
   }
 
   const handleFocus = (value) => {
@@ -64,11 +63,38 @@ function CustomerDetail({ navigation }) {
     setMarginText(0)
   }
 
-  const handlerSearch = (value) => {
-    console.log('value:',value)
-    setCode(value)
+  const handlerSearch = (value,action) => {  
+    if(value <10)  value = '0'+value.toString();
+    if(action === 'provinces') setCode(value)            
+    
+  }
+  const handlerPress = (value,action) => {    
+    switch (action) {
+      case  'provinces':        
+        setPaddingText(value)  
+        dispatch(resetDistricts())
+        break;
+      case  'districts':
+        setPaddingPaddingDis(value)  
+        break;
+    
+      default:
+        break;
+    }
+    
+    //console.log(action);
   }
 
+
+  useEffect(() => {
+    dispatch(getProvinces());
+  },[])
+
+  useEffect(() => {
+    dispatch(getDistricts(code))    
+    console.log('code:',code);
+  },[code])
+  
   return (
     <SafeArea
       style={{ flex: 1, marginHorizontal: 5, justifyContent: 'space-between' }}>
@@ -99,20 +125,17 @@ function CustomerDetail({ navigation }) {
             <TextInput style={{ width: '90%', borderWidth: 0.2, padding: 15, borderRadius: 6, }} placeholder='Tên khách hàng mua*' />
             <Ionicons name="person" color="#ccc" size={24} style={{ position: 'absolute', right: 10, bottom: 10 }} />
           </View>
-          <View style={{  marginBottom: 60 }}>
-          {provinces.length > 0 && (
-            <ComboBox countries={provinces} onSearch={handlerSearch}/> 
-                        
-          )}
-          </View>
-          {/* <View style={{ alignSelf: 'center', flexDirection: 'row', marginBottom: 10 }}>
-            <TextInput style={{ width: '90%', borderWidth: 0.2, padding: 15, borderRadius: 6, }} placeholder='Quận/huyện phố*' />
-            <Ionicons name="person" color="#ccc" size={24} style={{ position: 'absolute', right: 10, bottom: 10 }} />
-          </View>
-          <View style={{ alignSelf: 'center', flexDirection: 'row', marginBottom: 10 }}>
-            <TextInput style={{ width: '90%', borderWidth: 0.2, padding: 15, borderRadius: 6, }} placeholder='Phường/xã*' />
-            <Ionicons name="person" color="#ccc" size={24} style={{ position: 'absolute', right: 10, bottom: 10 }} />
-          </View>
+          {provinces.length > 0 && (<View style={{  paddingBottom: 60+paddingText}}>
+          
+            <ComboBox  countries={provinces} onSearch={handlerSearch} onPress={handlerPress} action={'provinces'}/>                         
+          
+          </View>)}    
+          {districts.length > 0 && (<View style={{  paddingBottom: 60+paddingDis}}>
+          
+            <ComboBox  countries={districts} onSearch={handlerSearch} onPress={handlerPress} action={'districts'}/>                         
+          
+          </View>)}    
+       
           <View style={{ alignSelf: 'center', flexDirection: 'row', marginBottom: 10 }}>
             <TextInput style={{ width: '90%', borderWidth: 0.2, padding: 15, borderRadius: 6, }} placeholder='Địa chỉ*' />
             <Ionicons name="person" color="#ccc" size={24} style={{ position: 'absolute', right: 10, bottom: 10 }} />
@@ -128,7 +151,7 @@ function CustomerDetail({ navigation }) {
           <View style={{ alignSelf: 'center', flexDirection: 'row', marginBottom: 10 }}>
             <TextInput onBlur={handleBlur} onFocus={() => handleFocus(-300)}   style={{ width: '90%', borderWidth: 0.2, padding: 15, borderRadius: 6, }} placeholder='Email Người đại diện*' />
             <Ionicons name="person" color="#ccc" size={24} style={{ position: 'absolute', right: 10, bottom: 10 }} />
-          </View> */}
+          </View>
         </View>
         <View>
           <Text style={{ marginTop: 20, marginBottom: 10, fontSize: 18, fontWeight: 600, marginLeft: 10 }}>THÔNG TIN XUẤT HÓA ĐƠN</Text>

@@ -10,19 +10,38 @@ export const getProvinces = createAsyncThunk('provinces/provincesFetched', async
     }     
 })
 
+export const getDistricts = createAsyncThunk('districts/districtsFetched', async (id) => {
+  try {            
+    const response = await axios.get(`https://laravel.tungocvan.com/api/getDistricts/${id}`); // Thay đổi URL API của bạn tại đây
+    return response.data
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }     
+})
+
 
 
 const provinceSlice = createSlice({
   name: "data",
   initialState: {    
     isRegister:false,   
-    provinces:[]
+    provinces:[],
+    districts:[]
   },
   reducers: {    
+    resetDistricts(state,action){
+      //console.log('statusReducer isStatus:',action.payload)
+      state.districts = []
+      return state
+  },  
   },
   extraReducers: (builder) => {
     builder.addCase(getProvinces.fulfilled,(state, action) => {
         state.provinces = action.payload
+        //console.log(action.payload);        
+    })
+    builder.addCase(getDistricts.fulfilled,(state, action) => {
+        state.districts = action.payload
         //console.log(action.payload);        
     })
   }
@@ -34,12 +53,15 @@ export default provinceReducer;
 
 // export các hàm đã khai báo trong reducers
 
-//export const { register } = userSlice.actions;  
+export const { resetDistricts } = provinceSlice.actions;  
 
 
 // Selector export các thuộc tính trong initialState
 
 export const provincesSelector = state => {  
   return state.data.provinces;   
+}
+export const districtsSelector = state => {  
+  return state.data.districts;   
 }
 

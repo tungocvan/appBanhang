@@ -15,8 +15,18 @@ import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-cont
 function ComboBox(props) {  
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
   const countries = useRef([]);
-  if(props.countries.length > 0) {
-    countries.current = props.countries;
+  const action = props.action ?? '';
+  if(props.countries.length > 0) {    
+    const inputObject = props.countries;
+    countries.current = inputObject.map(obj => {
+      if (obj.hasOwnProperty('full_name')) {                
+        return {...obj,name:obj.full_name}         
+      }else{
+        return obj;
+      }
+            
+    });
+    //  console.log('inputObject:',countries.current);
   } 
   
   const [search, setSearch] = useState('');
@@ -57,6 +67,7 @@ function ComboBox(props) {
         }}
         onPress={() => {
           setClicked(!clicked);
+          !clicked===true?props.onPress(400,action):props.onPress(0,action)            
         }}>
         <Text style={{fontWeight:'600'}}>
           {selectedCountry == '' ? 'Select Country' : selectedCountry}
@@ -87,10 +98,10 @@ function ComboBox(props) {
           <TextInput
             placeholder="Search.."
             value={search}
-            ref={searchRef}
+            ref={searchRef}              
             onChangeText={txt => {
               onSearch(txt);
-              setSearch(txt);
+              setSearch(txt);              
             }}
             style={{
               width: '90%',
@@ -98,8 +109,7 @@ function ComboBox(props) {
               alignSelf: 'center',
               borderWidth: 0.2,
               borderColor: '#8e8e8e',
-              borderRadius: 7,
-              marginTop: 20,
+              borderRadius: 7,              
               paddingLeft: 20,
             }}
           />
@@ -123,9 +133,10 @@ function ComboBox(props) {
                     setClicked(!clicked);
                     onSearch('');
                     setSearch('');
-                    props.onSearch(item.code)
+                    props.onSearch(item.code,action)      
+                    !clicked===true?props.onPress(400,action):props.onPress(0,action)                
                   }}>
-                  <Text style={{fontWeight: '600'}}>{item.name}</Text>
+                  {item.name && (<Text style={{fontWeight: '600'}}>{item.name}</Text>)}
                 </TouchableOpacity>
               );
             }}
