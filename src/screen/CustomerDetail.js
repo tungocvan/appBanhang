@@ -14,7 +14,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import RadioButton from '../components/RadioButton';
 import Checkbox from '../components/Checkbox';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProvinces, provincesSelector, getDistricts, districtsSelector , resetDistricts} from '../redux/reducers/dataSlice';
+import { getProvinces, provincesSelector, getDistricts, districtsSelector , resetDistricts, getWards,wardsSelector,resetWards} from '../redux/reducers/dataSlice';
 import ComboBox from '../components/ComboBox';
 
 
@@ -23,11 +23,14 @@ function CustomerDetail({ navigation }) {
   const dispatch = useDispatch()
   const provinces = useSelector(provincesSelector);
   const districts = useSelector(districtsSelector);
+  const wards = useSelector(wardsSelector);
   //const [dist,setDist] = useState(districts);
   const [marginText,setMarginText] = useState(0);
   const [paddingText,setPaddingText] = useState(0);
   const [paddingDis,setPaddingPaddingDis] = useState(0);
+  const [paddingWards,setPaddingWaddingWards] = useState(0);
   const [code,setCode] = useState(0);
+  const [codeWards,setCodeWards] = useState(0);
   //const marginText = useRef(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -64,8 +67,16 @@ function CustomerDetail({ navigation }) {
   }
 
   const handlerSearch = (value,action) => {  
-    if(value <10)  value = '0'+value.toString();
-    if(action === 'provinces') setCode(value)            
+    
+    if(action === 'provinces'){
+      if(value <10)  value = '0'+value.toString();
+      setCode(value)  
+    }           
+    if(action === 'districts') {
+      if(value <10)  value = '00'+value.toString();
+      if(value >=10 && value <100)  value = '0'+value.toString();
+      setCodeWards(value)
+    }           
     
   }
   const handlerPress = (value,action) => {    
@@ -73,16 +84,21 @@ function CustomerDetail({ navigation }) {
       case  'provinces':        
         setPaddingText(value)  
         dispatch(resetDistricts())
+        dispatch(resetWards())
         break;
       case  'districts':
         setPaddingPaddingDis(value)  
+        
+        break;
+      case  'wards':
+        setPaddingWaddingWards(value)  
         break;
     
       default:
         break;
     }
     
-    //console.log(action);
+    console.log(wards);
   }
 
 
@@ -94,6 +110,11 @@ function CustomerDetail({ navigation }) {
     dispatch(getDistricts(code))    
     console.log('code:',code);
   },[code])
+  
+  useEffect(() => {
+    dispatch(getWards(codeWards))    
+    console.log('codeWards:',codeWards);
+  },[codeWards])
   
   return (
     <SafeArea
@@ -130,10 +151,11 @@ function CustomerDetail({ navigation }) {
             <ComboBox  countries={provinces} onSearch={handlerSearch} onPress={handlerPress} action={'provinces'}/>                         
           
           </View>)}    
-          {districts.length > 0 && (<View style={{  paddingBottom: 60+paddingDis}}>
-          
-            <ComboBox  countries={districts} onSearch={handlerSearch} onPress={handlerPress} action={'districts'}/>                         
-          
+          {districts.length > 0 && (<View style={{  paddingBottom: 60+paddingDis}}>          
+            <ComboBox  countries={districts} onSearch={handlerSearch} onPress={handlerPress} action={'districts'}/>                                   
+          </View>)}    
+          {wards.length > 0 && (<View style={{  paddingBottom: 60+paddingWards}}>          
+            <ComboBox  countries={wards} onSearch={handlerSearch} onPress={handlerPress} action={'wards'}/>                                   
           </View>)}    
        
           <View style={{ alignSelf: 'center', flexDirection: 'row', marginBottom: 10 }}>

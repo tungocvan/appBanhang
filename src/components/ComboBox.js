@@ -17,16 +17,7 @@ function ComboBox(props) {
   const countries = useRef([]);
   const action = props.action ?? '';
   if(props.countries.length > 0) {    
-    const inputObject = props.countries;
-    countries.current = inputObject.map(obj => {
-      if (obj.hasOwnProperty('full_name')) {                
-        return {...obj,name:obj.full_name}         
-      }else{
-        return obj;
-      }
-            
-    });
-    //  console.log('inputObject:',countries.current);
+    countries.current = props.countries;    
   } 
   
   const [search, setSearch] = useState('');
@@ -37,7 +28,7 @@ function ComboBox(props) {
   const onSearch = search => {
     if (search !== '') {
       let tempData = data.filter(item => {
-        return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+        return item.full_name.toLowerCase().indexOf(search.toLowerCase()) > -1;
       });
       
       setData(tempData);
@@ -129,14 +120,14 @@ function ComboBox(props) {
                     borderColor: '#8e8e8e',               
                   }}
                   onPress={() => {
-                    setSelectedCountry(item.name);
+                    setSelectedCountry(item.full_name);
                     setClicked(!clicked);
                     onSearch('');
                     setSearch('');
                     props.onSearch(item.code,action)      
                     !clicked===true?props.onPress(400,action):props.onPress(0,action)                
                   }}>
-                  {item.name && (<Text style={{fontWeight: '600'}}>{item.name}</Text>)}
+                  <Text style={{fontWeight: '600'}}>{item.full_name}</Text>
                 </TouchableOpacity>
               );
             }}

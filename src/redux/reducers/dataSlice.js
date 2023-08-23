@@ -18,6 +18,14 @@ export const getDistricts = createAsyncThunk('districts/districtsFetched', async
       console.error('Error fetching data:', error);
     }     
 })
+export const getWards = createAsyncThunk('wards/wardsFetched', async (id) => {
+  try {            
+    const response = await axios.get(`https://laravel.tungocvan.com/api/getWards/${id}`); // Thay đổi URL API của bạn tại đây
+    return response.data
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }     
+})
 
 
 
@@ -26,14 +34,20 @@ const provinceSlice = createSlice({
   initialState: {    
     isRegister:false,   
     provinces:[],
-    districts:[]
+    districts:[],
+    wards:[],
   },
   reducers: {    
     resetDistricts(state,action){
       //console.log('statusReducer isStatus:',action.payload)
       state.districts = []
       return state
-  },  
+    },  
+    resetWards(state,action){
+      //console.log('statusReducer isStatus:',action.payload)
+      state.wards = []
+      return state
+    },  
   },
   extraReducers: (builder) => {
     builder.addCase(getProvinces.fulfilled,(state, action) => {
@@ -42,6 +56,10 @@ const provinceSlice = createSlice({
     })
     builder.addCase(getDistricts.fulfilled,(state, action) => {
         state.districts = action.payload
+        //console.log(action.payload);        
+    })
+    builder.addCase(getWards.fulfilled,(state, action) => {
+        state.wards = action.payload
         //console.log(action.payload);        
     })
   }
@@ -53,7 +71,7 @@ export default provinceReducer;
 
 // export các hàm đã khai báo trong reducers
 
-export const { resetDistricts } = provinceSlice.actions;  
+export const { resetDistricts, resetWards } = provinceSlice.actions;  
 
 
 // Selector export các thuộc tính trong initialState
@@ -63,5 +81,8 @@ export const provincesSelector = state => {
 }
 export const districtsSelector = state => {  
   return state.data.districts;   
+}
+export const wardsSelector = state => {  
+  return state.data.wards;   
 }
 
