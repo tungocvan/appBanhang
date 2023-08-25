@@ -61,7 +61,7 @@ function ComboBox(props) {
           !clicked===true?props.onPress(400,action):props.onPress(0,action)            
         }}>
         <Text style={{fontWeight:'600'}}>
-          {selectedCountry == '' ? 'Select Country' : selectedCountry}
+          {selectedCountry == '' ? props.title : selectedCountry}
         </Text>
         {clicked ? (
           <Image
