@@ -1,54 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef } from 'react';
 import {
-  View,
-  Text,
   Platform,
   SafeAreaView as SafeAreaViewIos,
-  ScrollView,
-  TouchableOpacity,
-  TextInput,
-
+  View, Text, TouchableOpacity
 } from 'react-native';
 import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-context';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import RadioButton from '../components/RadioButton';
-import Checkbox from '../components/Checkbox';
-import Address from '../components/Address';
-import MyTextInput from './MyTextInput';
-
+import globalStyles , {bgStyles} from "../globalStyles";
+import { Modalize } from 'react-native-modalize';
+import { SIZES } from "../constants/theme";
 
 function CustomerDetail({ navigation }) {
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
+  const modalizeRef = useRef(null)
 
-    
-  const [selectedOptions, setSelectedOptions] = useState([]);  
-  const optionsCheck = ['Tương tự thông tin trên', 'Tương tự thông tin trên 1'];
-
-  const handleCheckboxChange = (option) => {
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== option));
-    } else {
-      setSelectedOptions([...selectedOptions, option]);
-    }
+  const onOpen = () => {
+    modalizeRef.current?.open();
   };
-
- 
-
-
+  const onClose = () => {
+    modalizeRef.current?.close();
+  };
   return (
     <SafeArea
       style={{ flex: 1, marginHorizontal: 5 }}>
-      {
-          optionsCheck.map((option,index) =>{
-              return <Checkbox        
-              key={index}
-              label={option}
-              checked={selectedOptions.includes(option)}
-              onChange={() => handleCheckboxChange(option)}
-              />
-          })
-      }
-        
+      <View style={[globalStyles.shadowContainer]}>
+        <View style={[globalStyles.w0,globalStyles.center]}>
+          <TouchableOpacity onPress={onOpen}>
+            <Text style={[globalStyles.button]}>Open the modal-1</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Modalize
+          snapPoint={SIZES.height / 2}
+          modalHeight={SIZES.height / 2}
+          modalStyle={[globalStyles.bgModal]}
+          ref={modalizeRef}>
+          <View style={globalStyles.center}>
+            <Text style={[globalStyles.textBold]}>...your content</Text>
+            <Text style={[globalStyles.textBold]}>WIDTH:{SIZES.width}</Text>
+            <Text style={[globalStyles.textBold]}>HEIGHT:{SIZES.height}</Text>
+            <View style={globalStyles.w0}>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={[globalStyles.button]}>Submit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modalize>
+      </View>
     </SafeArea>
   );
 }

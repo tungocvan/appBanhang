@@ -40,7 +40,34 @@ const RadioButton = ({ options, selectedOption, onSelect }) => {
     );
  };
 
+function Radio(props) {
+  const [selectedOption, setSelectedOption] = React.useState(null);
+  const options = props.options ?? ['radio'];
 
+  const handleSelect = (option) => {
+    setSelectedOption(option);
+  };
+  React.useEffect(() => {
+    props.onRadio && props.onRadio(selectedOption);
+  },[selectedOption])
+  return (
+    <RadioButton options={options} selectedOption={selectedOption} onSelect={handleSelect} />
+   );
+ }
 //<RadioButton options={options} selectedOption={selectedOption} onSelect={handleSelect} />
 //make this component available to the app
-export default RadioButton;
+export default Radio;
+
+// Cách sử dụng Radio
+// const hanldeRadio = (value) => {
+//   console.log('hanldeRadio:',value)
+// }
+// const optionsRadio = ['radio 1','radio 2','radio 3'];
+// return (
+//   <View
+//     style={{ flex: 1, marginHorizontal: 5 }}>           
+//     {
+//         optionsRadio && <Radio options = {optionsRadio} onRadio = {hanldeRadio}/>
+//     }         
+//   </View>
+// );
