@@ -79,7 +79,7 @@ function ComboBox(props) {
         <View
           style={{            
             marginTop: 20,
-            height: 300,
+            height: '100%',
             alignSelf: 'center',
             width: '90%',
             backgroundColor: 'white',
@@ -107,7 +107,7 @@ function ComboBox(props) {
 
           <FlatList
             data={data}
-            
+            scrollEnabled={false}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
@@ -125,14 +125,12 @@ function ComboBox(props) {
                     onSearch('');
                     setSearch('');
                     props.onSearch(item.code,action)      
-                    !clicked===true?props.onPress(400,action):props.onPress(0,action)                
+                    !clicked===true?props.onPress(400,item.full_name,action):props.onPress(0,item.full_name,action)                
                   }}>
                   <Text style={{fontWeight: '600'}}>{item.full_name}</Text>
                 </TouchableOpacity>
               );
             }}
-            
-            
           />
         </View>
       ) : null}

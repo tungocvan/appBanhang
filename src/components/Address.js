@@ -1,9 +1,11 @@
 //import liraries
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, TextInput, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getProvinces, provincesSelector, getDistricts, districtsSelector, resetDistricts, getWards, wardsSelector, resetWards } from '../redux/reducers/dataSlice';
 import ComboBox from '../components/ComboBox';
+import { SIZES } from "../constants/theme";
 // create a component
 const Address = (props) => {
 
@@ -16,6 +18,7 @@ const Address = (props) => {
     const [paddingDis, setPaddingPaddingDis] = useState(0);
     const [paddingWards, setPaddingWaddingWards] = useState(0);
     const [code, setCode] = useState(0);
+    const [isShow, setIsShow] = useState(true);
     const [codeWards, setCodeWards] = useState(0);
 
     const handlerSearch = (value, action) => {
@@ -23,7 +26,7 @@ const Address = (props) => {
         if (action === 'provinces') {
             if (value < 10) value = '0' + value.toString();
             setCode(value)
-            
+
         }
         if (action === 'districts') {
             if (value < 10) value = '00' + value.toString();
@@ -32,28 +35,32 @@ const Address = (props) => {
         }
 
     }
-    const handlerPress = (value, action) => {
+    const handlerPress = (value, info, action) => {
+
         switch (action) {
             case 'provinces':
                 setPaddingText(value)
-                props.onPadding(value+60)
+                // props.onPadding(value+60)
                 dispatch(resetDistricts())
                 dispatch(resetWards())
+                props.onAddress(info, action)
                 break;
             case 'districts':
                 setPaddingPaddingDis(value)
-                props.onPadding(value+120)
+                //   props.onPadding(value+120)
+                props.onAddress(info, action)
                 break;
             case 'wards':
                 setPaddingWaddingWards(value)
-                props.onPadding(value+120)
+                //  props.onPadding(value+120)
+                props.onAddress(info, action)
                 break;
 
             default:
                 break;
         }
 
-        console.log(wards);
+
     }
     useEffect(() => {
         dispatch(getProvinces());
@@ -66,17 +73,26 @@ const Address = (props) => {
     useEffect(() => {
         dispatch(getWards(codeWards))
     }, [codeWards])
+
     return (
         <View style={styles.container}>
-            {provinces.length > 0 && (<View style={{ paddingBottom: 60 + paddingText }}>
+            {provinces.length > 0 && (<View style={{ paddingBottom: 10 + paddingText }}>
                 <ComboBox countries={provinces} onSearch={handlerSearch} onPress={handlerPress} action={'provinces'} title={'Chọn tỉnh/thành phố*'} />
-            </View>) || <ActivityIndicator />}
-            {districts.length > 0 && (<View style={{ paddingBottom: 60 + paddingDis }}>
-                <ComboBox countries={districts} onSearch={handlerSearch} onPress={handlerPress} action={'districts'} title={'Quận/huyện*'}/>
-            </View>) || <ActivityIndicator />}
-            {wards.length > 0 && (<View style={{ paddingBottom: 60 + paddingWards }}>
-                <ComboBox countries={wards} onSearch={handlerSearch} onPress={handlerPress} action={'wards'} title={'Phường/Xã*'}/>
-            </View>) || <ActivityIndicator />}
+            </View>)}
+            {districts.length > 0 && (<View style={{ paddingBottom: 10 + paddingDis }}>
+                <ComboBox countries={districts} onSearch={handlerSearch} onPress={handlerPress} action={'districts'} title={'Quận/huyện*'} />
+            </View>)}
+            {wards.length > 0 && (<View style={{ paddingBottom: 10 + paddingWards }}>
+                <ComboBox countries={wards} onSearch={handlerSearch} onPress={handlerPress} action={'wards'} title={'Phường/Xã*'} />
+            </View>)}
+            {wards.length > 0 && (<View style={{ paddingBottom: 10, width: SIZES.width }}>
+                <KeyboardAwareScrollView
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                    enableOnAndroid={true} // Cho phép hoạt động trên Android
+                >
+                    <TextInput style={{ width: '90%', borderWidth: 0.2, marginHorizontal: 20, height: 40, fontSize: 24, marginTop: 10 }} />
+                </KeyboardAwareScrollView>
+            </View>)}
         </View>
     );
 };
@@ -85,7 +101,6 @@ const Address = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
     },
 });
 

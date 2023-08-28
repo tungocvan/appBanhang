@@ -9,8 +9,6 @@ import globalStyles , {bgStyles} from "../globalStyles";
 import { Modalize } from 'react-native-modalize';
 import { SIZES } from "../constants/theme";
 
-import Address from '../components/Address';
-
 function CustomerDetail({ navigation }) {
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
   const modalizeRef = useRef(null)
@@ -21,14 +19,7 @@ function CustomerDetail({ navigation }) {
   const onClose = () => {
     modalizeRef.current?.close();
   };
-  
-  const hanlderAddress = (value,action) => {
-      console.log('value:',action+'-'+value);
-  }
-
-  //const [paddingAdress,setPaddingAdress] = React.useState(0);
-
-    return (
+  return (
     <SafeArea
       style={{ flex: 1, marginHorizontal: 5 }}>
       <View style={globalStyles.center}>
@@ -44,10 +35,11 @@ function CustomerDetail({ navigation }) {
           modalStyle={[globalStyles.bgModal]}
           ref={modalizeRef}>
           <View style={globalStyles.center}>
-            <View style={{margin:20,padding:20}}>
-                 <Address onAddress={hanlderAddress}/>
-            </View>   
-           
+            <View style={{marginVertical:10}}>
+            <Text style={[globalStyles.textBold]}>...your content</Text>
+            <Text style={[globalStyles.textBold]}>WIDTH:{SIZES.width}</Text>
+            <Text style={[globalStyles.textBold]}>HEIGHT:{SIZES.height}</Text>
+            </View>
             <View style={[globalStyles.shadowContainer,globalStyles.w0,{marginTop:10}]}>
               <TouchableOpacity onPress={onClose}>
                 <Text style={[globalStyles.button]}>Submit</Text>
