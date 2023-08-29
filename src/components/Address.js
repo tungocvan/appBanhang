@@ -1,11 +1,12 @@
 //import liraries
-import React, { useEffect, useState } from 'react';
-import { View, TextInput, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, TextInput, StyleSheet, ActivityIndicator,  Platform } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+//import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getProvinces, provincesSelector, getDistricts, districtsSelector, resetDistricts, getWards, wardsSelector, resetWards } from '../redux/reducers/dataSlice';
 import ComboBox from '../components/ComboBox';
 import { SIZES } from "../constants/theme";
+//import KeyboardAvoidingContainer from './KeyboardAvoidingContainer';
 // create a component
 const Address = (props) => {
 
@@ -18,9 +19,10 @@ const Address = (props) => {
     const [paddingDis, setPaddingPaddingDis] = useState(0);
     const [paddingWards, setPaddingWaddingWards] = useState(0);
     const [code, setCode] = useState(0);
-    const [isShow, setIsShow] = useState(true);
-    const [codeWards, setCodeWards] = useState(0);
+    //const [marginAddress, setMarginAddress] = useState(0);
 
+    const [codeWards, setCodeWards] = useState(0);
+    const marginAddress = useRef(0);
     const handlerSearch = (value, action) => {
 
         if (action === 'provinces') {
@@ -62,6 +64,7 @@ const Address = (props) => {
 
 
     }
+    
     useEffect(() => {
         dispatch(getProvinces());
     }, [])
@@ -74,8 +77,15 @@ const Address = (props) => {
         dispatch(getWards(codeWards))
     }, [codeWards])
 
+    const hanlderFocus = () => {
+        marginAddress.current = -150
+    }
     return (
-        <View style={styles.container}>
+        
+        <View 
+            style={{ flex: 1, marginTop: marginAddress.current}}                  
+        >    
+            
             {provinces.length > 0 && (<View style={{ paddingBottom: 10 + paddingText }}>
                 <ComboBox countries={provinces} onSearch={handlerSearch} onPress={handlerPress} action={'provinces'} title={'Chọn tỉnh/thành phố*'} />
             </View>)}
@@ -86,21 +96,17 @@ const Address = (props) => {
                 <ComboBox countries={wards} onSearch={handlerSearch} onPress={handlerPress} action={'wards'} title={'Phường/Xã*'} />
             </View>)}
             {wards.length > 0 && (<View style={{ paddingBottom: 10, width: SIZES.width }}>
-                <KeyboardAwareScrollView
-                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
-                    enableOnAndroid={true} // Cho phép hoạt động trên Android
-                >
-                    <TextInput style={{ width: '90%', borderWidth: 0.2, marginHorizontal: 20, height: 40, fontSize: 24, marginTop: 10 }} />
-                </KeyboardAwareScrollView>
-            </View>)}
-        </View>
+                <TextInput onFocus={hanlderFocus} style={{ width: '90%', borderWidth: 0.2, marginHorizontal: 20, height: 40, fontSize: 24, marginTop: 10 }} />
+             </View>)}
+        </View> 
+        
     );
 };
 
 // define your styles
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        //flex: 1,
     },
 });
 

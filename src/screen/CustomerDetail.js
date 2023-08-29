@@ -39,20 +39,21 @@ function CustomerDetail({ navigation }) {
         </View>
 
         <Modalize
-          snapPoint={SIZES.height / 2}
-          modalHeight={SIZES.height / 2}
+          snapPoint={300}
+          modalHeight={600}
           modalStyle={[globalStyles.bgModal]}
           ref={modalizeRef}>
           <View style={globalStyles.center}>
             <View style={{margin:20,padding:20}}>
                  <Address onAddress={hanlderAddress}/>
-            </View>   
-           
-            <View style={[globalStyles.shadowContainer,globalStyles.w0,{marginTop:10}]}>
+                 <View style={[globalStyles.shadowContainer,globalStyles.w0]}>
               <TouchableOpacity onPress={onClose}>
                 <Text style={[globalStyles.button]}>Submit</Text>
               </TouchableOpacity>
             </View>
+            </View>   
+           
+            
           </View>
         </Modalize>
       </View>
