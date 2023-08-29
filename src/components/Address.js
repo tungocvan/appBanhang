@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProvinces, provincesSelector, getDistricts, districtsSelector, resetDistricts, getWards, wardsSelector, resetWards } from '../redux/reducers/dataSlice';
 import ComboBox from '../components/ComboBox';
 import { SIZES } from "../constants/theme";
-//import KeyboardAvoidingContainer from './KeyboardAvoidingContainer';
+import KeyboardAvoidingContainer from './KeyboardAvoidingContainer';
 // create a component
 const Address = (props) => {
 
@@ -22,7 +22,7 @@ const Address = (props) => {
     //const [marginAddress, setMarginAddress] = useState(0);
 
     const [codeWards, setCodeWards] = useState(0);
-    const marginAddress = useRef(0);
+    const infoAddress = useRef('');
     const handlerSearch = (value, action) => {
 
         if (action === 'provinces') {
@@ -59,6 +59,7 @@ const Address = (props) => {
                 break;
 
             default:
+                props.onAddress(infoAddress.current, 'infoAddress')
                 break;
         }
 
@@ -77,15 +78,13 @@ const Address = (props) => {
         dispatch(getWards(codeWards))
     }, [codeWards])
 
-    const hanlderFocus = () => {
-        marginAddress.current = -150
-    }
+   
     return (
         
         <View 
-            style={{ flex: 1, marginTop: marginAddress.current}}                  
+            style={{ flex: 1}}                  
         >    
-            
+            <TextInput onChangeText={(text) => infoAddress.current=text} placeholder='Số nhà và tên đường' style={{ width: '90%', borderWidth: 0.2, marginHorizontal: 20, height: 40, fontSize: 16, marginVertical: 10, paddingHorizontal:10 }} />
             {provinces.length > 0 && (<View style={{ paddingBottom: 10 + paddingText }}>
                 <ComboBox countries={provinces} onSearch={handlerSearch} onPress={handlerPress} action={'provinces'} title={'Chọn tỉnh/thành phố*'} />
             </View>)}
@@ -94,10 +93,7 @@ const Address = (props) => {
             </View>)}
             {wards.length > 0 && (<View style={{ paddingBottom: 10 + paddingWards }}>
                 <ComboBox countries={wards} onSearch={handlerSearch} onPress={handlerPress} action={'wards'} title={'Phường/Xã*'} />
-            </View>)}
-            {wards.length > 0 && (<View style={{ paddingBottom: 10, width: SIZES.width }}>
-                <TextInput onFocus={hanlderFocus} style={{ width: '90%', borderWidth: 0.2, marginHorizontal: 20, height: 40, fontSize: 24, marginTop: 10 }} />
-             </View>)}
+            </View>)}            
         </View> 
         
     );

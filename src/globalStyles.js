@@ -37,7 +37,7 @@ export default globalStyles = StyleSheet.create({
         paddingVertical: 20,
         width: '100%',
         backgroundColor:'cyan',
-        marginTop: 70
+        
     },
     button: {
         fontWeight: 600,
