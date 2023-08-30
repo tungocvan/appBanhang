@@ -58,7 +58,7 @@ function ComboBox(props) {
         }}
         onPress={() => {
           setClicked(!clicked);
-          !clicked===true?props.onPress(400,action):props.onPress(0,action)            
+          !clicked===true?props.onPressAddress(400,action):props.onPressAddress(0,action)            
         }}>
         <Text style={{fontWeight:'600'}}>
           {selectedCountry == '' ? props.title : selectedCountry}
@@ -125,7 +125,7 @@ function ComboBox(props) {
                     onSearch('');
                     setSearch('');
                     // props.onSearch(item.code,action)      
-                    !clicked===true?props.onPress(item.code,item.full_name,action):props.onPress(item.code,item.full_name,action)                
+                    !clicked===true?props.onPressAddress(item.code,item.full_name,action):props.onPressAddress(item.code,item.full_name,action)                
                   }}>
                   <Text style={{fontWeight: '600'}}>{item.full_name}</Text>
                 </TouchableOpacity>
