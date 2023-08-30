@@ -124,8 +124,8 @@ function ComboBox(props) {
                     setClicked(!clicked);
                     onSearch('');
                     setSearch('');
-                    props.onSearch(item.code,action)      
-                    !clicked===true?props.onPress(400,item.full_name,action):props.onPress(0,item.full_name,action)                
+                    // props.onSearch(item.code,action)      
+                    !clicked===true?props.onPress(item.code,item.full_name,action):props.onPress(item.code,item.full_name,action)                
                   }}>
                   <Text style={{fontWeight: '600'}}>{item.full_name}</Text>
                 </TouchableOpacity>
