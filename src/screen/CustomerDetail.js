@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import {
   Platform,
   SafeAreaView as SafeAreaViewIos,
-  View, Text, TouchableOpacity, ActivityIndicator
+  View, Text, TouchableOpacity, ActivityIndicator, TextInput
 } from 'react-native';
 import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,7 @@ import { SIZES } from "../constants/theme";
 
 
 
+
 function CustomerDetail({ navigation }) {
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
   const dispatch = useDispatch()
@@ -22,15 +23,20 @@ function CustomerDetail({ navigation }) {
   const [district, setDistrict] = React.useState({})
   const [ward, setWard] = React.useState({})
   const [modal, setModal] = React.useState('')
+  const [address, setAddress] = React.useState('')
+  const modalRef =useRef('provinces')
   const provinces = useSelector(provincesSelector);
   const districts = useSelector(districtsSelector);
   const wards = useSelector(wardsSelector);
   const [code, setCode] = useState(0);
-  const onOpen = (action) => {
+  const [codeWards, setCodeWards] = useState(0);
+  const onOpen = (action) => {        
+    modalizeRef.current?.open();       
     setModal(action)
-    modalizeRef.current?.open();
+    
   };
   const onClose = () => {
+    console.log('onClose');
     modalizeRef.current?.close();
 
   };
@@ -41,64 +47,95 @@ function CustomerDetail({ navigation }) {
         if (value < 10) value = '0' + value.toString();
         setDistrict({})
         setWard({})
+        setCodeWards(0)
         setProvince({
           'code': value,
           'title': info
         })
         setCode(value)
+        onClose();
         break;
       case 'districts':
         if (value < 10) value = '00' + value.toString();
         if (value >= 10 && value < 100) value = '0' + value.toString();
+        setWard({})
         setDistrict({
           'code': value,
           'title': info
         })
-        setCode(value)
+        setCodeWards(value)
+        onClose();
         break;
       case 'wards':
         setWard({
           'code': value,
           'title': info
         })
+        onClose();
         break;
-
-      default:
+      case 'address':  
+        setAddress(info)
+        onClose();
+        break;
+      default:        
         break;
     }
+    
   }
   useEffect(() => {
     dispatch(getProvinces());
   }, [])
   useEffect(() => {    
-     dispatch(getDistricts(code))
-      console.log('code:',code);
+     dispatch(getDistricts(code))        
   }, [code])
 
   useEffect(() => {
-    district?.code && dispatch(getWards(code))
-  }, [code])
+    dispatch(getWards(codeWards))        
+  }, [codeWards])
 
+  useEffect(() => {
+    modal!=='' && modalizeRef.current?.open(); 
+  }, [modal])
   
-  console.log('districts:',districts.length);
+  
 
   const CustomModalize = (props) => {
-    // data,action='provinces',title='Chọn tỉnh/thành phố*')
-      data = props.data ?? [];
       action = props.action ?? 'provinces'
-      title = props.title ?? 'Chọn tỉnh/thành phố*'
+      console.log('CustomModalize action:',action);
+      title =  'Chọn tỉnh/thành phố*'      
+      var data = [];
+      switch (action) {
+        case 'provinces':
+          data = provinces
+          title = 'Chọn tỉnh/thành phố*'
+          break;
+        case 'districts':
+          data = districts
+          title='Quận/huyện*'
+          break;
+        case 'wards':
+          data = wards
+          title='Phường/Xã*'
+          break;
+      
+        default:
+          break;
+      }
+
+      
+      
       return (
-        <Modalize
+        data.length > 0 && (<Modalize
           snapPoint={600}
           modalHeight={900}
           modalStyle={[globalStyles.bgModal, { marginTop: 25 }]}
           ref={modalizeRef}>
           <View style={globalStyles.center}>
             <View style={{ marginHorizontal: 20, padding: 20 }}>
-             <ComboBox countries={data} onPressAddress={handlerPress} action={action} title={title} />        
+               <ComboBox countries={data} onPressAddress={handlerPress} action={action} title={title} />        
             </View>
           </View>
-        </Modalize>
+        </Modalize>)
       )
   }
 
@@ -111,17 +148,15 @@ function CustomerDetail({ navigation }) {
           (<TouchableOpacity onPress={() => onOpen('provinces')} style={{ marginTop: 10, borderBottomWidth: 1 }}>
             <Text style={[globalStyles.button]}>{province.title}</Text>
           </TouchableOpacity>)}
-          {districts.length > 0 &&
-          (<TouchableOpacity onPress={() => onOpen('districts')} style={{ marginTop: 10, borderBottomWidth: 1 }}>
+          <TouchableOpacity onPress={() => onOpen('districts')} style={{ marginTop: 10, borderBottomWidth: 1 }}>
             <Text style={[globalStyles.button]}>{district?.title || 'Quận/huyện*'}</Text>
-          </TouchableOpacity>)}
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => onOpen('wards')} style={{ marginTop: 10, borderBottomWidth: 1 }}>
             <Text style={[globalStyles.button]}>{ward?.title || 'Phường/Xã*'}</Text>
           </TouchableOpacity>
+          <TextInput value={address} style={{height:50,padding:15,fontSize:18}} placeholder={'Địa chỉ'} onChangeText={(text) => handlerPress(0,text,'address')}/>
         </View>
-        {provinces.length > 0 && modal==='provinces' && <CustomModalize data={provinces}  /> }
-        {modal==='districts' && <CustomModalize data={districts} action='districts' title='Quận/huyện*'  /> }
-        {wards.length > 0 && modal==='wards' && <CustomModalize data={wards} action='wards' title='Phường/Xã*'  /> }
+        <CustomModalize action={modal}/>
       </View>
     </SafeArea>
   );
