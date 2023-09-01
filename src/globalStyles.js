@@ -41,13 +41,13 @@ export default globalStyles = StyleSheet.create({
     },
     button: {
         fontWeight: 600,
-        fontFamily: 'Avenir',        
-        textAlign: "center",
+        fontFamily: 'Avenir',               
         fontSize: 20,
         backgroundColor: '#fff',
+        color:'#ccc'        
         // borderWidth:0.2,
-        paddingHorizontal:15,
-        paddingVertical:10
+        // paddingHorizontal:15,
+        // paddingVertical:10
     },
     boxShadow: {
         borderRadius: 18,        
