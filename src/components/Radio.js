@@ -41,9 +41,9 @@ const RadioButton = ({ options, selectedOption, onSelect }) => {
  };
 
 function Radio(props) {
-  const [selectedOption, setSelectedOption] = React.useState(null);
+  
   const options = props.options ?? ['radio'];
-
+  const [selectedOption, setSelectedOption] = React.useState(options[0]);
   const handleSelect = (option) => {
     setSelectedOption(option);
   };

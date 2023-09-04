@@ -1,24 +1,33 @@
 //import liraries
-import React from 'react';
+import React,{useRef} from 'react';
 import { View,  StyleSheet, TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+
 // create a component
 const MyTextInput = (props) => {
     iconName= props.iconName ?? "person"
-    iconColor= props.iconColor ?? "#ccc"
+    iconColor= props.iconColor ?? "black"
     iconSize= props.iconSize ?? 24
     placeholder = props.placeholder ?? ''
-    value = props.value ?? '';
+    action = props.action ?? '';      
+    styleContainer = props.styleContainer ?? ''; 
+    styleIcon = props.styleIcon ?? { position: 'absolute', right: 15, bottom: 10 }; 
+    styleInput = props.styleInput ?? { width: '100%', borderWidth: 0.2, padding: 15, borderRadius: 6}; 
+    
     const [text,setText] = React.useState('');
-    const handleInput = (value) => {
+    
+    const handleInput = (value) => {             
         setText(value)
-        props.onMyTextInput && props.onMyTextInput(value)
+        props.onMyTextInput && props.onMyTextInput(value,action)
     }
+   
+   
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container,styleContainer]}>
             <View style={{ alignSelf: 'center', flexDirection: 'row', marginBottom: 10 }}>
-                <TextInput value={text} style={{ width: '90%', borderWidth: 0.2, padding: 15, borderRadius: 6, }} placeholder={placeholder} onChangeText={handleInput}/>
-                <Ionicons name={iconName} color={iconColor} size={24} style={{ position: 'absolute', right: 10, bottom: 10 }} />
+                <TextInput value={text} style={styleInput} placeholder={placeholder} onChangeText={handleInput} />
+                <Ionicons name={iconName} color={iconColor} size={iconSize} style={styleIcon} />
           </View>
         </View>
     );

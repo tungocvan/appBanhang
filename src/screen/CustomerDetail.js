@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import {
   Platform,
   SafeAreaView as SafeAreaViewIos,
-  View, Text, TouchableOpacity, ActivityIndicator, TextInput
+  View, Text, TouchableOpacity, ActivityIndicator, TextInput, ScrollView,
+  KeyboardAvoidingView
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-context';
@@ -12,6 +13,9 @@ import ComboBox from '../components/ComboBox';
 import globalStyles, { bgStyles } from "../globalStyles";
 import { Modalize } from 'react-native-modalize';
 import { SIZES } from "../constants/theme";
+import Radio from '../components/Radio';
+import CheckBox from '../components/Checkbox';
+import MyTextInput from './MyTextInput';
 
 
 
@@ -20,17 +24,22 @@ function CustomerDetail({ navigation }) {
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
   const dispatch = useDispatch()
   const modalizeRef = useRef(null)
+  const inputRef = useRef(null);
+  const [textInputRef, setTextInputRef] = useState(0);
+  const [customer, setCustomer] = React.useState({})
   const [province, setProvince] = React.useState({ 'title': 'Chọn tỉnh/thành phố*' })
   const [district, setDistrict] = React.useState({})
   const [ward, setWard] = React.useState({})
   const [modal, setModal] = React.useState('')
-  const [address, setAddress] = React.useState('')
-  const modalRef = useRef('provinces')
+  const [show, setShow] = React.useState(false)
+
   const provinces = useSelector(provincesSelector);
   const districts = useSelector(districtsSelector);
   const wards = useSelector(wardsSelector);
   const [code, setCode] = useState(0);
   const [codeWards, setCodeWards] = useState(0);
+  const optionsRadio = ['Chưa có thông tin xuất hóa đơn', 'Có thông tin xuất hóa đơn'];
+  const optionsCheck = ['Tương tự thông tin trên'];
   const onOpen = (action) => {
     modalizeRef.current?.open();
     setModal(action)
@@ -53,6 +62,7 @@ function CustomerDetail({ navigation }) {
           'code': value,
           'title': info
         })
+        setCustomer({...customer,'province':info}) 
         setCode(value)
         onClose();
         break;
@@ -60,6 +70,7 @@ function CustomerDetail({ navigation }) {
         if (value < 10) value = '00' + value.toString();
         if (value >= 10 && value < 100) value = '0' + value.toString();
         setWard({})
+        setCustomer({...customer,'district':info}) 
         setDistrict({
           'code': value,
           'title': info
@@ -68,14 +79,11 @@ function CustomerDetail({ navigation }) {
         onClose();
         break;
       case 'wards':
+        setCustomer({...customer,'ward':info}) 
         setWard({
           'code': value,
           'title': info
         })
-        onClose();
-        break;
-      case 'address':
-        setAddress(info)
         onClose();
         break;
       default:
@@ -140,38 +148,157 @@ function CustomerDetail({ navigation }) {
     )
   }
 
+
+  const hanldeRadio = (value) => {
+    
+    if(value === 'Có thông tin xuất hóa đơn') {
+       setShow(true)
+    }else{
+      setShow(false)
+    }
+  }
+
+  const hanldeCheckbox = (value) => {
+    console.log('hanldeCheckbox:',value);    
+    if(value[0] === 'Tương tự thông tin trên') {
+      console.log('address:',customer.address);  
+      setCustomer({...customer,'customerCompnay':customer.customerName,'addressCompnay':customer.address})
+   }
+  }
+
+  const hanlderMyTextInput = (value, action) => {
+    console.log(action + '-' + value)    
+    switch (action) {
+      case 'customerName':              
+        setCustomer({...customer,'customerName':value})      
+        break;
+      case 'fullname':              
+        setCustomer({...customer,'fullname':value})      
+        break;
+      case 'address':
+        setCustomer({...customer,'address':value})
+        break;
+      case 'phone':
+        setCustomer({...customer,'phone':value})
+        break;
+      case 'email':
+        setCustomer({...customer,'email':value})
+        break;
+      case 'customerCompnay':
+        setCustomer({...customer,'customerCompnay':value})
+        break;
+      case 'codetax':
+        setCustomer({...customer,'codetax':value})
+        break;
+      case 'addressCompnay':
+        setCustomer({...customer,'addressCompnay':value})
+        break;
+    
+      default:
+        break;
+    }
+    console.log('customer:',customer);
+  }
+
+  const hanlderSubmit = () => {
+    console.log('Customer:', customer)
+  }
+
   return (
     <SafeArea
-      style={{ flex: 1, marginHorizontal: 5 }}>
-      <View style={globalStyles.center}>
-        <View style={[globalStyles.w90, globalStyles.shadowContainer]}>
-
-          {provinces.length > 0 &&
-            (
-            <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection:'row', justifyContent:'space-between', paddingHorizontal:15,paddingVertical:10 }}> 
-            <TouchableOpacity onPress={() => onOpen('provinces')}>
-              <Text placeholder={province.title} style={[globalStyles.button,{color: provinces.length >0?'black':'#ccc'}]}>{province.title}</Text>              
-            </TouchableOpacity>
-            <Ionicons name="cart-outline" color="black" size={24} />
+      style={{ flex: 1, marginHorizontal: 5, marginTop: 100 + textInputRef }}>
+      <ScrollView style={{ flex: 1, paddingTop: 50 }}>
+        <View style={[globalStyles.center, { flex: 1 }]}>
+          <View style={{ position: 'absolute', width: 100, height: 100, backgroundColor: "#ccc", zIndex: 9999, top: -50, borderRadius: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <Ionicons name="camera" color="black" size={40} />
+          </View>
+          <View style={[globalStyles.w90, globalStyles.shadowContainer]}>
+            <View style={{ marginTop: 50 }}>
+              <MyTextInput
+                action='customerName'
+                styleContainer={{ width: '100%', borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}
+                styleInput={{ height: 50, padding: 15, fontSize: 18, width: '100%', color: 'black' }}
+                placeholder='Tên khách hàng' onMyTextInput={hanlderMyTextInput} />
             </View>
-            )}
-          <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection:'row', justifyContent:'space-between', paddingHorizontal:15,paddingVertical:10 }}> 
-          <TouchableOpacity onPress={() => onOpen('districts')}>
-            <Text style={[globalStyles.button,{color: districts.length >0?'black':'#ccc'}]}>{district?.title || 'Quận/huyện*'}</Text>
-          </TouchableOpacity>
-          <Ionicons name="cart-outline" color="black" size={24} />
+            {provinces.length > 0 &&
+              (
+                <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15, paddingVertical: 10 }}>
+                  <TouchableOpacity onPress={() => onOpen('provinces')}>
+                    <Text placeholder={province.title} style={[globalStyles.button, { color: provinces.length > 0 ? 'black' : '#ccc' }]}>{province.title}</Text>
+                  </TouchableOpacity>
+                  <Ionicons name="cart-outline" color="black" size={24} />
+                </View>
+              )}
+            <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15, paddingVertical: 10 }}>
+              <TouchableOpacity onPress={() => onOpen('districts')}>
+                <Text style={[globalStyles.button, { color: districts.length > 0 ? 'black' : '#ccc' }]}>{district?.title || 'Quận/huyện*'}</Text>
+              </TouchableOpacity>
+              <Ionicons name="cart-outline" color="black" size={24} />
+            </View>
+            <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 15, paddingVertical: 10 }}>
+              <TouchableOpacity onPress={() => onOpen('wards')}>
+                <Text style={[globalStyles.button, { color: wards.length > 0 ? 'black' : '#ccc' }]}>{ward?.title || 'Phường/Xã*'}</Text>
+              </TouchableOpacity>
+              <Ionicons name="cart-outline" color="black" size={24} />
+            </View>
+            <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TextInput value={customer?.address} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Địa chỉ'} onChangeText={(text) => hanlderMyTextInput(text, 'address')} />
+              <Ionicons name="cart-outline" color="black" size={24} style={{ paddingHorizontal: 15, paddingVertical: 10 }} />
+            </View>
+            <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TextInput value={customer?.fullname} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Họ tên người đại diện'} onChangeText={(text) => hanlderMyTextInput(text, 'fullname')} />
+              <Ionicons name="cart-outline" color="black" size={24} style={{ paddingHorizontal: 15, paddingVertical: 10 }} />
+            </View>
+            <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TextInput onBlur={() => setTextInputRef(0)} onFocus={() => setTextInputRef(-270)} value={customer?.phone} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Số điện thoại người đại diện'} onChangeText={(text) => hanlderMyTextInput(text, 'phone')} />
+              <Ionicons name="cart-outline" color="black" size={24} style={{ paddingHorizontal: 15, paddingVertical: 10 }} />
+            </View>
+            <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TextInput onBlur={() => setTextInputRef(0)} onFocus={() => setTextInputRef(-270)} value={customer?.email} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Email người đại diện'} onChangeText={(text) => hanlderMyTextInput(text, 'email')} />
+              <Ionicons name="cart-outline" color="black" size={24} style={{ paddingHorizontal: 15, paddingVertical: 10 }} />
+            </View>
+
+            <View style={{ flex: 1 }}> 
+              <Text style={[globalStyles.button, { paddingVertical: 20, paddingHorizontal: 15, color: 'black', fontSize: 20 }]}>THÔNG TIN XUẤT HÓA ĐƠN</Text>
+              <View
+                style={{ flex: 1, marginHorizontal: 15, marginBottom:50 }}>
+                {
+                  optionsRadio && <Radio options={optionsRadio} onRadio={hanldeRadio} />
+                }
+                {
+                  show && (
+                    <View style={{ flex: 1, paddingBottom: 50 }}>
+                  <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TextInput onBlur={() => setTextInputRef(0)} onFocus={() => setTextInputRef(-400)} value={customer?.customerCompnay} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Tên khách hàng'} onChangeText={(text) => hanlderMyTextInput(text, 'customerCompnay')} />
+                    <Ionicons name="cart-outline" color="black" size={24} style={{ paddingHorizontal: 15, paddingVertical: 10 }} />
+                  </View>
+                  <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TextInput onBlur={() => setTextInputRef(0)} onFocus={() => setTextInputRef(-460)} value={customer?.codetax} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Mã số thuế'} onChangeText={(text) => hanlderMyTextInput(text, 'codetax')} />
+                    <Ionicons name="cart-outline" color="black" size={24} style={{ paddingHorizontal: 15, paddingVertical: 10 }} />
+                  </View>
+                  <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TextInput onBlur={() => setTextInputRef(0)} onFocus={() => setTextInputRef(-500)} value={customer?.addressCompnay} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Địa chỉ kinh doanh'} onChangeText={(text) => hanlderMyTextInput(text, 'addressCompnay')} />
+                    <Ionicons name="cart-outline" color="black" size={24} style={{ paddingHorizontal: 15, paddingVertical: 10 }} />
+                  </View>
+                  <View
+                    style={{ flex: 1, marginHorizontal: 5, marginVertical: 15 }}>
+                    {
+                      optionsCheck && <CheckBox options={optionsCheck} onCheckBox={hanldeCheckbox} />
+                    }
+                  </View>
+                </View>
+                  )
+                }
+              </View>
+            </View>
           </View>
-          <View style={{ marginTop: 10, borderBottomWidth: 1, flexDirection:'row', justifyContent:'space-between', paddingHorizontal:15,paddingVertical:10 }}> 
-          <TouchableOpacity onPress={() => onOpen('wards')}>
-            <Text style={[globalStyles.button,{color: wards.length >0?'black':'#ccc'}]}>{ward?.title || 'Phường/Xã*'}</Text>
-          </TouchableOpacity>
-          <Ionicons name="cart-outline" color="black" size={24} />
-          </View>
-          <View style={{ marginTop: 10 }}>
-          <TextInput value={address} style={{ height: 50, padding: 15, fontSize: 18 }} placeholder={'Địa chỉ'} onChangeText={(text) => handlerPress(0, text, 'address')} />
-          </View>
+          {modal !== '' && <CustomModalize action={modal} />}
         </View>
-        {modal !== '' && <CustomModalize action={modal} />}
+      </ScrollView>
+      <View style={{height:50,width:'100%',padding:10,justifyContent:'center',alignItems:'center', backgroundColor:"green"}}>
+         <TouchableOpacity onPress={hanlderSubmit}>
+          <Text style={{ fontSize:20,fontWeight:600, color:'white'}}>Submit</Text>
+          </TouchableOpacity>           
       </View>
     </SafeArea>
   );
