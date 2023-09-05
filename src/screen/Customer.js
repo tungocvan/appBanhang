@@ -4,6 +4,7 @@ import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-cont
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomerDetail from './CustomerDetail';
+import Test from './Test';
 function Customer({ navigation }) {
   let SafeArea = Platform.OS === 'ios' ? SafeAreaViewIos : SafeAreaViewAndroid;
   return (
@@ -58,11 +59,19 @@ function StackCustomer() {
         }}
       />         
       <Stack.Screen
+        name="Test"
+        component={Test}
+        options={{
+          header: () => null,
+        }}
+      />     
+      <Stack.Screen
         name="CustomerDetail"
         component={CustomerDetail}
         options={{
           header: () => null,
         }}
+        
       />     
     </Stack.Navigator>
   );

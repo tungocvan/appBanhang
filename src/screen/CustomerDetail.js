@@ -135,12 +135,12 @@ function CustomerDetail({ navigation }) {
 
     return (
       data.length > 0 && (<Modalize
-        snapPoint={600}
+        snapPoint={800}
         modalHeight={900}
         modalStyle={[globalStyles.bgModal, { marginTop: 25 }]}
         ref={modalizeRef}>
         <View style={globalStyles.center}>
-          <View style={{ marginHorizontal: 20, padding: 20 }}>
+          <View style={{ padding: 20 }}>
             <ComboBox countries={data} onPressAddress={handlerPress} action={action} title={title} />
           </View>
         </View>

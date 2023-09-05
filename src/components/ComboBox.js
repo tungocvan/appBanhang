@@ -41,7 +41,7 @@ function ComboBox(props) {
 
   return (
     <SafeArea
-      style={{ flex: 1 }}>
+      style={{ flex: 1 , marginHorizontal: 20}}>
     <View>
       <TouchableOpacity
         style={{
@@ -102,6 +102,7 @@ function ComboBox(props) {
               borderColor: '#8e8e8e',
               borderRadius: 7,              
               paddingLeft: 20,
+              marginTop:10
             }}
           />
 
