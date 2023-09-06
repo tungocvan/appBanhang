@@ -3,10 +3,12 @@ import {
   Platform,
   SafeAreaView as SafeAreaViewIos,
   View, Text, TouchableOpacity, ActivityIndicator, TextInput, ScrollView,
-  KeyboardAvoidingView
+  Image
 } from 'react-native';
+import axios from 'axios';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView as SafeAreaViewAndroid } from 'react-native-safe-area-context';
+import * as DocumentPicker from 'expo-document-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProvinces, provincesSelector, getDistricts, districtsSelector, resetDistricts, getWards, wardsSelector, resetWards } from '../redux/reducers/dataSlice';
 import ComboBox from '../components/ComboBox';
@@ -32,7 +34,7 @@ function CustomerDetail({ navigation }) {
   const [ward, setWard] = React.useState({})
   const [modal, setModal] = React.useState('')
   const [show, setShow] = React.useState(false)
-
+  const [selectedFile, setSelectedFile] = useState(null);
   const provinces = useSelector(provincesSelector);
   const districts = useSelector(districtsSelector);
   const wards = useSelector(wardsSelector);
@@ -200,9 +202,46 @@ function CustomerDetail({ navigation }) {
     console.log('customer:',customer);
   }
 
-  const hanlderSubmit = () => {
+  const hanlderSubmit = async () => {
     console.log('Customer:', customer)
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', {
+        uri: selectedFile.uri,
+        type: selectedFile.mimeType,
+        name: selectedFile.name,
+      });
+      try {
+        //console.log(formData._parts);
+        const response = await axios.post('https://laravel.tungocvan.com/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+         console.log(response.data);
+      } catch (error) {
+        console.error('Lỗi khi tải tệp lên:', error);
+      }
+    }
   }
+
+  
+  const handleFileUpload = async () => {
+      try {
+        const result = await DocumentPicker.getDocumentAsync({
+          type: 'image/*', // Chọn tất cả các loại tệp
+        });       
+         
+        if (result.assets) {
+          setSelectedFile(result.assets[0]);
+          // console.log('result-1:',result.assets[0]);
+          
+        }
+      } catch (error) {
+         console.error('Lỗi khi chọn tệp:', error);
+      }
+  };
 
   return (
     <SafeArea
@@ -210,8 +249,12 @@ function CustomerDetail({ navigation }) {
       <ScrollView style={{ flex: 1, paddingTop: 50 }}>
         <View style={[globalStyles.center, { flex: 1 }]}>
           <View style={{ position: 'absolute', width: 100, height: 100, backgroundColor: "#ccc", zIndex: 9999, top: -50, borderRadius: '100%', justifyContent: 'center', alignItems: 'center' }}>
-            <Ionicons name="camera" color="black" size={40} />
-          </View>
+          <TouchableOpacity onPress={handleFileUpload}>
+              {
+                selectedFile && (<Image source={{ uri:selectedFile.uri }} style={{borderRadius:1000, width:100,height:100}} />) || (<Ionicons name="camera" color="black" size={40} />)
+              } 
+              </TouchableOpacity> 
+          </View> 
           <View style={[globalStyles.w90, globalStyles.shadowContainer]}>
             <View style={{ marginTop: 50 }}>
               <MyTextInput

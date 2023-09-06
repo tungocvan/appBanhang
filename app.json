@@ -1,6 +1,14 @@
 {
   "expo": {
     "name": "appBanhang",
+    "plugins": [
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ]
+    ],
     "slug": "appBanhang",
     "version": "1.0.0",
     "orientation": "portrait",
