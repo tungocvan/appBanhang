@@ -203,26 +203,27 @@ function CustomerDetail({ navigation }) {
   }
 
   const hanlderSubmit = async () => {
-    console.log('Customer:', customer)
-    if (selectedFile) {
-      const formData = new FormData();
+    //console.log('Customer:', customer)
+    const formData = new FormData();
+    if (selectedFile) {      
       formData.append('file', {
         uri: selectedFile.uri,
         type: selectedFile.mimeType,
         name: selectedFile.name,
+      });          
+    }
+    try {
+      //console.log(formData._parts);
+      formData.append('data',JSON.stringify(customer)); 
+      const response = await axios.post('https://laravel.tungocvan.com/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      try {
-        //console.log(formData._parts);
-        const response = await axios.post('https://laravel.tungocvan.com/api/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
 
-         console.log(response.data);
-      } catch (error) {
-        console.error('Lỗi khi tải tệp lên:', error);
-      }
+       console.log(response.data);
+    } catch (error) {
+      console.error('Lỗi khi tải tệp lên:', error);
     }
   }
 
